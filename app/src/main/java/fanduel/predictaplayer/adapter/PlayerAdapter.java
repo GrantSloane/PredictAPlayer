@@ -31,6 +31,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     private List<Player> players;
     private int rowLayout;
     private Context context;
+    private int cellHeight ;
 
     public static class PlayerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -57,13 +58,15 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         public void onClick(View view) {
             Log.d(TAG, "onClick " + getAdapterPosition() + " >>>>>>>>>>>> " + itemIndex);
 
+
         }
     }
 
-    public PlayerAdapter(List<Player> players, int rowLayout, Context context) {
+    public PlayerAdapter(List<Player> players, int rowLayout,int cellHeight, Context context) {
         this.players = players;
         this.rowLayout = rowLayout;
         this.context = context;
+        this.cellHeight = cellHeight ;
     }
 
     @Override
@@ -75,8 +78,10 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     @Override
     public void onBindViewHolder(PlayerViewHolder holder, final int position) {
 
-        holder.setItem(position) ;
+        holder.playerLayout.setMinimumHeight(cellHeight);
+        holder.setItem(position);
         holder.name.setText(players.get(position).getFirstName() + " " + players.get(position).getLastName());
+
         if(players.get(position).getFppg() != null)
             holder.fppg.setText("FPPG : " + Float.toString(players.get(position).getFppg()));
         else  holder.fppg.setText("FPPG : NULL ");
@@ -84,10 +89,14 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
 //        if(players.get(position).getImages().getDefault().getUrl() != null) {
             Picasso.with(context)
                     .load(players.get(position).getImages().getDefault().getUrl())
-                    .placeholder( R.drawable.progress_animation )
+                    .placeholder(R.drawable.progress_animation)
                     .into(holder.profile);
 
+
        // }
+
+
+
     }
 
     @Override

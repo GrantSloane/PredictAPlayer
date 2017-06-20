@@ -2,11 +2,13 @@ package fanduel.predictaplayer;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 
 
 import java.util.List;
@@ -41,9 +43,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if(response != null) {
                     List<Player> players = response.body().getPlayers();
-                    recyclerView.setAdapter(new PlayerAdapter(players, R.layout.player_listview_item, getApplicationContext()));
+                    int size = players.size() ;
+                    players.subList(5, players.size()).clear();
+
+                    int listViewHeight = recyclerView.getMeasuredHeight()/5;
+                    recyclerView.setAdapter(new PlayerAdapter(players, R.layout.player_listview_item,listViewHeight, getApplicationContext()));
                 }
-                
+
             }
 
             @Override
