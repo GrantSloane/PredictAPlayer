@@ -31,6 +31,10 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'com.google.code.gson:gson:2.6.2'
 
-    //FitGridView
-    compile 'com.github.ceryle:FitGridView:v1.0.4'
+    // Recycler View
+    compile 'com.android.support:recyclerview-v7:23.3.0'
+
+    //Picasso for dynamically loading images
+    compile "com.squareup.picasso:picasso:2.4.0"
+
 }

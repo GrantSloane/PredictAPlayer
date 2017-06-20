@@ -4,11 +4,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 
 import java.util.List;
 
+import fanduel.predictaplayer.adapter.PlayerAdapter;
 import fanduel.predictaplayer.model.Player;
 import fanduel.predictaplayer.model.PlayerResponse;
 import fanduel.predictaplayer.services.NetworkAPI;
@@ -26,17 +29,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycle_view_players);
+        if(recyclerView != null)
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         NetworkAPI apiService = NetworkClient.getClient().create(NetworkAPI.class);
         Call<PlayerResponse> call = apiService.getPlayerDetails();
         call.enqueue(new Callback<PlayerResponse>() {
             @Override
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
 
-                List<Player> players = response.body().getPlayers();
-                for(int i=0 ; i <players.size() ; i++)
-                {
-                    System.out.println("PLAYER " + Integer.toString(i) + " " + players.get(i).getFirstName() + " " +  players.get(i).getLastName()  );
+                if(response != null) {
+                    List<Player> players = response.body().getPlayers();
+                    recyclerView.setAdapter(new PlayerAdapter(players, R.layout.player_listview_item, getApplicationContext()));
                 }
+                
             }
 
             @Override

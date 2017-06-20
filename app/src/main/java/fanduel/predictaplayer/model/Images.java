@@ -2,16 +2,19 @@
 package fanduel.predictaplayer.model;
 
 
+import com.google.gson.annotations.SerializedName;
+
 public class Images {
 
-    private Default _default;
+    @SerializedName("default")
+    private Default defaultImage;
 
     public Default getDefault() {
-        return _default;
+        return defaultImage;
     }
 
-    public void setDefault(Default _default) {
-        this._default = _default;
+    public void setDefault(Default defaultImage) {
+        this.defaultImage = defaultImage;
     }
 
 }
