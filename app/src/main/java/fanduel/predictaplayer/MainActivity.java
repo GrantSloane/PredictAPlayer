@@ -14,6 +14,8 @@ import android.view.Display;
 import java.util.List;
 
 import fanduel.predictaplayer.adapter.PlayerAdapter;
+import fanduel.predictaplayer.listhandler.PlayerRoundGenerator;
+import fanduel.predictaplayer.listhandler.RandomNumberGenerator;
 import fanduel.predictaplayer.model.Player;
 import fanduel.predictaplayer.model.PlayerResponse;
 import fanduel.predictaplayer.services.NetworkAPI;
@@ -42,12 +44,16 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
 
                 if(response != null) {
+                    int sampleSize = response.body().getPlayers().size() ;
+                    int SETTINGS_SIZE = 5 ;
                     List<Player> players = response.body().getPlayers();
-                    int size = players.size() ;
-                    players.subList(5, players.size()).clear();
 
-                    int listViewHeight = recyclerView.getMeasuredHeight()/5;
-                    recyclerView.setAdapter(new PlayerAdapter(players, R.layout.player_listview_item,listViewHeight, getApplicationContext()));
+                    PlayerRoundGenerator round = new PlayerRoundGenerator(players,SETTINGS_SIZE);
+                    List<Player> randomPlayers = round.generateRandomPlayers() ;
+
+                    int listViewHeight = recyclerView.getMeasuredHeight()/SETTINGS_SIZE;
+                    recyclerView.setAdapter(new PlayerAdapter(randomPlayers, R.layout.player_listview_item,listViewHeight, getApplicationContext()));
+
                 }
 
             }
