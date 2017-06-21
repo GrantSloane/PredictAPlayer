@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by gcslo on 6/20/2017.
+ * This class generates a list of random number to decide what players to guess from
  */
 public class RandomNumberGenerator
 {

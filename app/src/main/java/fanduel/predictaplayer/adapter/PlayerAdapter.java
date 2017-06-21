@@ -23,7 +23,7 @@ import fanduel.predictaplayer.model.Player;
 import fanduel.predictaplayer.model.Players;
 
 /**
- * Created by gcslo on 6/20/2017.
+ * This adapter is used to display the players in the main activity recycler view
  */
 public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>  {
 
@@ -38,7 +38,6 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         LinearLayout playerLayout;
         ImageView profile ;
         TextView name ;
-        TextView fppg ;
         private int itemIndex;
 
         public PlayerViewHolder(View v) {
@@ -46,7 +45,6 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
             playerLayout = (LinearLayout) v.findViewById(R.id.lyt_player);
             profile = (ImageView) v.findViewById(R.id.img_profile);
             name = (TextView) v.findViewById(R.id.txt_name);
-            fppg = (TextView) v.findViewById(R.id.txt_fppg);
             v.setOnClickListener(this);
         }
 
@@ -78,24 +76,18 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     @Override
     public void onBindViewHolder(PlayerViewHolder holder, final int position) {
 
-        holder.playerLayout.setMinimumHeight(cellHeight);
+        //Scale each cell to fill the whole screen
+        android.view.ViewGroup.LayoutParams layoutParams = holder.playerLayout.getLayoutParams();
+        layoutParams.height = cellHeight;
+        holder.playerLayout.setLayoutParams(layoutParams);
+
         holder.setItem(position);
         holder.name.setText(players.get(position).getFirstName() + " " + players.get(position).getLastName());
 
-        if(players.get(position).getFppg() != null)
-            holder.fppg.setText("FPPG : " + Float.toString(players.get(position).getFppg()));
-        else  holder.fppg.setText("FPPG : NULL ");
-
-//        if(players.get(position).getImages().getDefault().getUrl() != null) {
             Picasso.with(context)
                     .load(players.get(position).getImages().getDefault().getUrl())
-                    .placeholder(R.drawable.progress_animation)
+                    .placeholder(R.drawable.user)
                     .into(holder.profile);
-
-
-       // }
-
-
 
     }
 

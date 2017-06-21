@@ -6,7 +6,7 @@ import java.util.List;
 import fanduel.predictaplayer.model.Player;
 
 /**
- * Created by gcslo on 6/20/2017.
+ * This class generates a list of random players for the user to guess
  */
 public class PlayerRoundGenerator {
 
