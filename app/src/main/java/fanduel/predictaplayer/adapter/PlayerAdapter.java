@@ -37,6 +37,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     private int rowLayout;
     private Context context;
     private int cellHeight ;
+    private int winningIndex ;
 
     public static class PlayerViewHolder extends RecyclerView.ViewHolder{
 
@@ -63,11 +64,12 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
 //        }
     }
 
-    public PlayerAdapter(List<Player> players, int rowLayout,int cellHeight, Context context) {
+    public PlayerAdapter(List<Player> players, int rowLayout,int cellHeight,int winningIndex, Context context) {
         this.players = players;
         this.rowLayout = rowLayout;
         this.context = context;
         this.cellHeight = cellHeight ;
+        this.winningIndex = winningIndex ;
     }
 
     @Override
@@ -88,7 +90,8 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         final String url = players.get(position).getImages().getDefault().getUrl();
         final String name = players.get(position).getFirstName() + " " + players.get(position).getLastName() ;
         final double fppg = players.get(position).getFppg() ;
-        final boolean correct = true ;
+        final boolean correct = (position == winningIndex) ? true : false;
+
 
         holder.setItem(position);
         holder.name.setText(name);
@@ -106,7 +109,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
                 Bundle bundle = new Bundle() ;
                 bundle.putString(ResultFragment.EXTRA_IMAGE_URL,url);
                 bundle.putString(ResultFragment.EXTRA_PLAYER_NAME, name);
-                bundle.putBoolean(ResultFragment.EXTRA_RESULT, false);
+                bundle.putBoolean(ResultFragment.EXTRA_RESULT,correct);
                 bundle.putString(ResultFragment.EXTRA_PLAYER_FPPG, String.format("%.2f", fppg) );
                 resultFragment.setArguments(bundle) ;
                 //Create a bundle to pass data, add data, set the bundle to your fragment and:

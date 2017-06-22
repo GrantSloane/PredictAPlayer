@@ -56,14 +56,15 @@ public class GuessFragment extends Fragment
 
                 if(response != null) {
                     int sampleSize = response.body().getPlayers().size() ;
-                    int SETTINGS_SIZE = 5 ;
+                    int SETTINGS_SIZE = 3 ;
                     List<Player> players = response.body().getPlayers();
 
                     PlayerRoundGenerator round = new PlayerRoundGenerator(players,SETTINGS_SIZE);
                     List<Player> randomPlayers = round.generateRandomPlayers() ;
+                    int winnerIndex = round.determineHighestFPPG();
 
                     int listViewHeight = (int) Math.round(recyclerView.getMeasuredHeight()/SETTINGS_SIZE);
-                    recyclerView.setAdapter(new PlayerAdapter(randomPlayers, R.layout.player_listview_item,listViewHeight, getContext()));
+                    recyclerView.setAdapter(new PlayerAdapter(randomPlayers, R.layout.player_listview_item,listViewHeight,winnerIndex, getContext()));
 
                 }
 
