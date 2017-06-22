@@ -89,7 +89,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
 
         final String url = players.get(position).getImages().getDefault().getUrl();
         final String name = players.get(position).getFirstName() + " " + players.get(position).getLastName() ;
-        final double fppg = players.get(position).getFppg() ;
+        final double fppg = (players.get(position).getFppg() != null) ? players.get(position).getFppg() : 0 ;
         final boolean correct = (position == winningIndex) ? true : false;
 
 

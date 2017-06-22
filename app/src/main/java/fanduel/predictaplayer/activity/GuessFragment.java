@@ -3,6 +3,7 @@ package fanduel.predictaplayer.activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import fanduel.predictaplayer.R;
 import fanduel.predictaplayer.adapter.PlayerAdapter;
+import fanduel.predictaplayer.helper.SharedPreferenceManager;
 import fanduel.predictaplayer.listhandler.PlayerRoundGenerator;
 import fanduel.predictaplayer.model.Player;
 import fanduel.predictaplayer.model.PlayerResponse;
@@ -41,8 +43,15 @@ public class GuessFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_guess, null, false);
 
         TextView settings = (TextView) view.findViewById(R.id.txt_settings);
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),"fontawesome-webfont.ttf");
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf");
         settings.setTypeface(tf);
+        settings.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                AppCompatActivity activity = (AppCompatActivity) getContext();
+                SettingsFragment settingsFragment = new SettingsFragment() ;
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.lyt_container, settingsFragment).addToBackStack(null).commit();
+            }
+        });
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view_players);
         if(recyclerView != null)
@@ -54,17 +63,17 @@ public class GuessFragment extends Fragment
             @Override
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
 
-                if(response != null) {
-                    int sampleSize = response.body().getPlayers().size() ;
-                    int SETTINGS_SIZE = 3 ;
+                if (response != null) {
+                    int sampleSize = response.body().getPlayers().size();
+                    int SETTINGS_SIZE = SharedPreferenceManager.getDifficulty(getContext());
                     List<Player> players = response.body().getPlayers();
 
-                    PlayerRoundGenerator round = new PlayerRoundGenerator(players,SETTINGS_SIZE);
-                    List<Player> randomPlayers = round.generateRandomPlayers() ;
+                    PlayerRoundGenerator round = new PlayerRoundGenerator(players, SETTINGS_SIZE);
+                    List<Player> randomPlayers = round.generateRandomPlayers();
                     int winnerIndex = round.determineHighestFPPG();
 
-                    int listViewHeight = (int) Math.round(recyclerView.getMeasuredHeight()/SETTINGS_SIZE);
-                    recyclerView.setAdapter(new PlayerAdapter(randomPlayers, R.layout.player_listview_item,listViewHeight,winnerIndex, getContext()));
+                    int listViewHeight = (int) Math.round(recyclerView.getMeasuredHeight() / SETTINGS_SIZE);
+                    recyclerView.setAdapter(new PlayerAdapter(randomPlayers, R.layout.player_listview_item, listViewHeight, winnerIndex, getContext()));
 
                 }
 

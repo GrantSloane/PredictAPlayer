@@ -44,11 +44,12 @@ public class PlayerRoundGenerator {
 
         for(int i=0 ; i<randomPlayers.size();i++)
         {
-            currentFPPG = randomPlayers.get(i).getFppg();
-            if(currentFPPG > highestFPPG)
-            {
-                highestFPPG = currentFPPG ;
-                index = i;
+            if(randomPlayers.get(i).getFppg() != null) {
+                currentFPPG = randomPlayers.get(i).getFppg();
+                if (currentFPPG > highestFPPG) {
+                    highestFPPG = currentFPPG;
+                    index = i;
+                }
             }
         }
         return index;

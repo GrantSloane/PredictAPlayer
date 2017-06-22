@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import fanduel.predictaplayer.R;
 
-public class GuessActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     GuessFragment guess_fragment;
 
