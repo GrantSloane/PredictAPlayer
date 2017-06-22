@@ -2,6 +2,9 @@ package fanduel.predictaplayer.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fanduel.predictaplayer.R;
+import fanduel.predictaplayer.activity.GuessFragment;
+import fanduel.predictaplayer.activity.ResultFragment;
 import fanduel.predictaplayer.model.Player;
 import fanduel.predictaplayer.model.Players;
 
@@ -33,7 +38,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
     private Context context;
     private int cellHeight ;
 
-    public static class PlayerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class PlayerViewHolder extends RecyclerView.ViewHolder{
 
         LinearLayout playerLayout;
         ImageView profile ;
@@ -45,19 +50,17 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
             playerLayout = (LinearLayout) v.findViewById(R.id.lyt_player);
             profile = (ImageView) v.findViewById(R.id.img_profile);
             name = (TextView) v.findViewById(R.id.txt_name);
-            v.setOnClickListener(this);
         }
 
         public void setItem(int item) {
             itemIndex = item;
         }
 
-        @Override
-        public void onClick(View view) {
-            Log.d(TAG, "onClick " + getAdapterPosition() + " >>>>>>>>>>>> " + itemIndex);
-
-
-        }
+//        @Override
+//        public void onClick(View view) {
+//            Log.d(TAG, "onClick " + getAdapterPosition() + " >>>>>>>>>>>> " + itemIndex);
+//
+//        }
     }
 
     public PlayerAdapter(List<Player> players, int rowLayout,int cellHeight, Context context) {
@@ -78,16 +81,39 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
 
         //Scale each cell to fill the whole screen
         android.view.ViewGroup.LayoutParams layoutParams = holder.playerLayout.getLayoutParams();
-        layoutParams.height = cellHeight;
+        //The 3 pixels taken off the cellHeight are to account for the rounding errors. Determined through trial and error
+        layoutParams.height = cellHeight - 3;
         holder.playerLayout.setLayoutParams(layoutParams);
 
+        final String url = players.get(position).getImages().getDefault().getUrl();
+        final String name = players.get(position).getFirstName() + " " + players.get(position).getLastName() ;
+        final double fppg = players.get(position).getFppg() ;
+        final boolean correct = true ;
+
         holder.setItem(position);
-        holder.name.setText(players.get(position).getFirstName() + " " + players.get(position).getLastName());
+        holder.name.setText(name);
 
             Picasso.with(context)
-                    .load(players.get(position).getImages().getDefault().getUrl())
+                    .load(url)
                     .placeholder(R.drawable.user)
                     .into(holder.profile);
+
+        holder.playerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                ResultFragment resultFragment = new ResultFragment() ;
+                Bundle bundle = new Bundle() ;
+                bundle.putString(ResultFragment.EXTRA_IMAGE_URL,url);
+                bundle.putString(ResultFragment.EXTRA_PLAYER_NAME, name);
+                bundle.putBoolean(ResultFragment.EXTRA_RESULT, false);
+                bundle.putString(ResultFragment.EXTRA_PLAYER_FPPG, String.format("%.2f", fppg) );
+                resultFragment.setArguments(bundle) ;
+                //Create a bundle to pass data, add data, set the bundle to your fragment and:
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.lyt_container, resultFragment).addToBackStack(null).commit();
+            }
+        });
+
 
     }
 
