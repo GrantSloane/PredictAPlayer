@@ -86,7 +86,6 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         //The 3 pixels taken off the cellHeight are to account for the rounding errors. Determined through trial and error
         layoutParams.height = cellHeight - 3;
         holder.playerLayout.setLayoutParams(layoutParams);
-
         final String url = players.get(position).getImages().getDefault().getUrl();
         final String name = players.get(position).getFirstName() + " " + players.get(position).getLastName() ;
         final double fppg = (players.get(position).getFppg() != null) ? players.get(position).getFppg() : 0 ;

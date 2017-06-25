@@ -11,7 +11,7 @@ public class RandomNumberGenerator
     private int size ;
     private int range ;
 
-    public RandomNumberGenerator(int size, int range) {
+    public RandomNumberGenerator(int range,int size) {
         this.size = size;
         this.range = range ;
     }
@@ -30,5 +30,7 @@ public class RandomNumberGenerator
         return numbers;
     }
 
-
+    public void setSize(int size) {
+        this.size = size;
+    }
 }

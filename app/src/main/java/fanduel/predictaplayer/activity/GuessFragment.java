@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import java.util.List;
@@ -32,6 +33,14 @@ import retrofit2.Response;
 public class GuessFragment extends Fragment
 {
     private static final String TAG = GuessFragment.class.getSimpleName();
+    public static final String PLAYER_KEY = "player_key";
+    public static View view ;
+    private Bundle savedState = null;
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     public static GuessFragment newInstance() {
         GuessFragment fragment = new GuessFragment();
@@ -40,51 +49,39 @@ public class GuessFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_guess, null, false);
-
+        view = inflater.inflate(R.layout.fragment_guess, null, false);
         TextView settings = (TextView) view.findViewById(R.id.txt_settings);
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fontawesome-webfont.ttf");
         settings.setTypeface(tf);
         settings.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AppCompatActivity activity = (AppCompatActivity) getContext();
-                SettingsFragment settingsFragment = new SettingsFragment() ;
+                SettingsFragment settingsFragment = new SettingsFragment();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.lyt_container, settingsFragment).addToBackStack(null).commit();
             }
         });
 
-        final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view_players);
-        if(recyclerView != null)
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        NetworkAPI apiService = NetworkClient.getClient().create(NetworkAPI.class);
-        Call<PlayerResponse> call = apiService.getPlayerDetails();
-        call.enqueue(new Callback<PlayerResponse>() {
+        //Wait for the view to be drawn on the screen before calculating the height
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
+            public void onGlobalLayout() {
+                view.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view_players);
+                if (recyclerView != null)
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                if (response != null) {
-                    int sampleSize = response.body().getPlayers().size();
-                    int SETTINGS_SIZE = SharedPreferenceManager.getDifficulty(getContext());
-                    List<Player> players = response.body().getPlayers();
-
-                    PlayerRoundGenerator round = new PlayerRoundGenerator(players, SETTINGS_SIZE);
-                    List<Player> randomPlayers = round.generateRandomPlayers();
-                    int winnerIndex = round.determineHighestFPPG();
-
-                    int listViewHeight = (int) Math.round(recyclerView.getMeasuredHeight() / SETTINGS_SIZE);
-                    recyclerView.setAdapter(new PlayerAdapter(randomPlayers, R.layout.player_listview_item, listViewHeight, winnerIndex, getContext()));
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<PlayerResponse> call, Throwable t) {
-                Log.e(TAG, t.toString());
+                MainActivity activity = (MainActivity) getActivity();
+                PlayerRoundGenerator round = activity.getRound();
+                List<Player> randomPlayers = round.generateRandomPlayers();
+                int winnerIndex = round.determineHighestFPPG();
+                int listViewHeight = Math.round(recyclerView.getMeasuredHeight() / SharedPreferenceManager.getDifficulty(getContext()));
+                recyclerView.setAdapter(new PlayerAdapter(randomPlayers, R.layout.player_listview_item, listViewHeight, winnerIndex, getContext()));
             }
         });
 
         return view;
     }
+
+
+
 }

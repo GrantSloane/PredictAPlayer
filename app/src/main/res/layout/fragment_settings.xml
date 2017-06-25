@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:textColor="@color/white"
-            android:background="@color/light_blue"
+            android:background="@drawable/button_set"
             android:textSize="24sp"
             android:textStyle="bold"
             android:text="SET"

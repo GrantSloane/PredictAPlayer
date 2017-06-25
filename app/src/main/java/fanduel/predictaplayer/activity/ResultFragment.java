@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fanduel.predictaplayer.R;
+import fanduel.predictaplayer.listhandler.PlayerRoundGenerator;
 
 /**
  * Created by gcslo on 6/21/2017.
@@ -27,6 +28,7 @@ public class ResultFragment extends Fragment
     private static String playerName ;
     private static String playerFppg ;
     private static boolean correct ;
+    private MainActivity mainActivity ;
 
     public static ResultFragment newInstance(String URL,String name,double fppg, boolean result) {
         ResultFragment fragment = new ResultFragment();
@@ -40,6 +42,7 @@ public class ResultFragment extends Fragment
         TextView name = (TextView) view.findViewById(R.id.txt_name) ;
         TextView fppg = (TextView) view.findViewById(R.id.txt_fppg) ;
         TextView result = (TextView) view.findViewById(R.id.txt_result) ;
+        mainActivity = (MainActivity) getActivity() ;
 
         imageURL = getArguments().getString(EXTRA_IMAGE_URL);
         playerName = getArguments().getString(EXTRA_PLAYER_NAME);
@@ -53,13 +56,16 @@ public class ResultFragment extends Fragment
         name.setText(playerName);
         fppg.setText(playerFppg);
         if(correct) {
+
             profilePicture.setFillColor(getResources().getColor(R.color.green));
             result.setText("Correct!");
+            mainActivity.increaseCorrectScore();
         }
         else
         {
             profilePicture.setFillColor(getResources().getColor(R.color.red));
             result.setText("Incorrect!");
+            mainActivity.increaseInCorrectScore();
         }
 
         return view;

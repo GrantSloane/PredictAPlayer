@@ -6,7 +6,55 @@
     <FrameLayout
         android:id="@+id/lyt_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/dark_blue">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_margin="20dp">
+
+        <TextView
+            android:id="@+id/txt_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading Player Data"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textAlignment="center"/>
+
+        <ImageView
+            android:id="@+id/loading_spinner"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/progress_animation"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            />
+
+            <Button
+                android:id="@+id/btn_retry"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:textColor="@color/white"
+                android:background="@drawable/button_set"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:text="Retry"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+
+
+
     </FrameLayout>
 
 </LinearLayout>

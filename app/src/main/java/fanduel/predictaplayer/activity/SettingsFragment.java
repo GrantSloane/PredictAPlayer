@@ -1,5 +1,6 @@
 package fanduel.predictaplayer.activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fanduel.predictaplayer.R;
 import fanduel.predictaplayer.helper.SharedPreferenceManager;
+import fanduel.predictaplayer.listhandler.PlayerRoundGenerator;
 
 /**
  * Created by gcslo on 6/22/2017.
@@ -37,9 +39,12 @@ public class SettingsFragment extends Fragment
         Button setDifficulty = (Button) view.findViewById(R.id.btn_set_difficulty);
         setDifficulty.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SharedPreferenceManager.setDifficulty(getContext(),difficultyLevel.getValue());
+                SharedPreferenceManager.setDifficulty(getContext(), difficultyLevel.getValue());
                 AppCompatActivity activity = (AppCompatActivity) getContext();
+                MainActivity currentActivity = (MainActivity) getActivity();
+                currentActivity.resetDifficultyRound();
                 GuessFragment guessFragment = new GuessFragment() ;
+                activity.getSupportFragmentManager().beginTransaction().remove(SettingsFragment.this).commit() ;
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.lyt_container, guessFragment).addToBackStack(null).commit();
             }
         });
