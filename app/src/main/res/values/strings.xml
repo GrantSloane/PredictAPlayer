@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PredictAPlayer</string>
+    <string name="app_name">Predict A Player</string>
     <string name="fa_icon_settings">&#xf013;</string>
     <string name="fa_icon_trophy">&#xf091;</string>
     <string name="error_loading">There was an error loading the data</string>
