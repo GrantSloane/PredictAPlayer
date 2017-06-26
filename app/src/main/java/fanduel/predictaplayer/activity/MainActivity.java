@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.List;
@@ -27,13 +28,10 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private PlayerRoundGenerator round ;
-    private static int CORRECT_GUESSES_REQUIRED = 10 ;
     private static final String TAG = MainActivity.class.getSimpleName();
     private static TextView loadingText;
     private static ImageView loadingSpinner;
     private static Button btnRetry;
-    private static final String SELECTED_ITEM_POSITION = "ItemPosition";
-    private int mPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnRetry.setVisibility(View.GONE);
         loadingSpinner.setVisibility(View.VISIBLE);
-        loadingText.setText("Loading Player Data");
+        loadingText.setText(getResources().getString(R.string.loading_data));
         Animation startRotateAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
         loadingSpinner.startAnimation(startRotateAnimation);
 
@@ -66,32 +64,39 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<PlayerResponse> call, Response<PlayerResponse> response) {
 
-                System.out.println("<><><><><> RESPONSE <><><><><>");
-
-                loadingSpinner.clearAnimation();
+                if (loadingSpinner != null)
+                    loadingSpinner.clearAnimation();
 
                 if (response != null) {
                     List<Player> players = response.body().getPlayers();
-                    System.out.println("RESPONSE IS NOT NULL");
-                    round = new PlayerRoundGenerator(getApplicationContext(),players);
+                    round = new PlayerRoundGenerator(getApplicationContext(), players);
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.lyt_container, new GuessFragment());
                     ft.commit();
+                } else {
+                    loadingSpinner.clearAnimation();
+                    btnRetry.setVisibility(View.VISIBLE);
+                    loadingSpinner.setVisibility(View.GONE);
+                    loadingText.setText(getResources().getString(R.string.connectivity_issue));
+                    btnRetry.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            loadPlayerData();
+                        }
+                    });
+                    loadingText.setText(getResources().getString(R.string.error_loading));
                 }
-                else System.out.println("RESPONSE IS NULL");
 
             }
 
             @Override
             public void onFailure(Call<PlayerResponse> call, Throwable t) {
                 loadingSpinner.clearAnimation();
-                System.out.println("<><><><><> FAILURE <><><><><>");
                 btnRetry.setVisibility(View.VISIBLE);
                 loadingSpinner.setVisibility(View.GONE);
-                loadingText.setText("Unable to load player data. Please check you network connectivity");
+                loadingText.setText(getResources().getString(R.string.connectivity_issue));
                 btnRetry.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                       loadPlayerData();
+                        loadPlayerData();
                     }
                 });
                 Log.e(TAG, t.toString());
@@ -112,23 +117,30 @@ public class MainActivity extends AppCompatActivity {
     public void increaseCorrectScore()
     {
         int score = round.getCorrectScoreCount() +1 ;
-        if(score == CORRECT_GUESSES_REQUIRED)
-        {
-            double totalGuesses = CORRECT_GUESSES_REQUIRED+round.getIncorrectScoreCount() ;
-            double accuracy =  ( CORRECT_GUESSES_REQUIRED/totalGuesses)*100 ;
-            System.out.println("Congratulations. You achieved a guess accuracy of " + String.format("%.2f", accuracy).replace("00","") + "%");
-            round.setCorrectScore(0);
-            round.setIncorrectScore(0);
-        }
-        else round.setCorrectScore(score);
-
-
+        round.setCorrectScore(score);
     }
 
-    public void increaseInCorrectScore()
+    public void increaseIncorrectScore()
     {
         int score = round.getIncorrectScoreCount() + 1 ;
         round.setIncorrectScore(score);
     }
+
+    public void clearScore()
+    {
+            round.setCorrectScore(0);
+            round.setIncorrectScore(0);
+    }
+
+    public int getCorrectScore()
+    {
+        return round.getCorrectScoreCount();
+    }
+
+    public int getIncorrectScore()
+    {
+        return round.getIncorrectScoreCount();
+    }
+
 
 }

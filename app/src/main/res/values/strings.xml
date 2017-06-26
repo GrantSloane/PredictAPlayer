@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">PredictAPlayer</string>
     <string name="fa_icon_settings">&#xf013;</string>
+    <string name="fa_icon_trophy">&#xf091;</string>
+    <string name="error_loading">There was an error loading the data</string>
+    <string name="loading_data">Loading Player Data</string>
+    <string name="correct">Correct!</string>
+    <string name="incorrect">Incorrect!</string>
+    <string name="congratulations">Congratulations. You achieved a guess accuracy of </string>
+    <string name="connectivity_issue">Unable to load player data. Please check you network connectivity</string>
 </resources>

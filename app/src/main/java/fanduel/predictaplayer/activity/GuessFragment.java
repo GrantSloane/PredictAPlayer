@@ -33,9 +33,7 @@ import retrofit2.Response;
 public class GuessFragment extends Fragment
 {
     private static final String TAG = GuessFragment.class.getSimpleName();
-    public static final String PLAYER_KEY = "player_key";
     public static View view ;
-    private Bundle savedState = null;
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {

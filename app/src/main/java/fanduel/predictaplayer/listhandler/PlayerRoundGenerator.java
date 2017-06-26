@@ -27,7 +27,6 @@ public class PlayerRoundGenerator{
     public PlayerRoundGenerator(Context context, List<Player> players) {
         this.players = players;
         this.size = SharedPreferenceManager.getDifficulty(context);
-        System.out.println("DIFFICULTY SET TO: " + Integer.toString(size)) ;
         random = new RandomNumberGenerator(players.size(),size);
         randomPlayers = new ArrayList<Player>() ;
         this.context = context ;
@@ -35,14 +34,11 @@ public class PlayerRoundGenerator{
 
     public List<Player> generateRandomPlayers()
     {
-
-        System.out.println("Generating Players");
         randomPlayers.clear();
         List<Integer> randomNumbers = random.generateRandomNumbers() ;
         for(int i=0 ; i<randomNumbers.size(); i++)
         {
             randomPlayers.add(players.get(randomNumbers.get(i))) ;
-            System.out.println("PLAYER: " + randomPlayers.get(i).getFirstName() + " " + String.format("%.2f", randomPlayers.get(i).getFppg()));
         }
         return randomPlayers ;
     }
@@ -83,10 +79,6 @@ public class PlayerRoundGenerator{
 
     public void setIncorrectScore(int incorrectScoreCount) {
         this.incorrectScoreCount = incorrectScoreCount;
-    }
-
-    public int getSize() {
-        return size;
     }
 
     public void resetDifficulty() {

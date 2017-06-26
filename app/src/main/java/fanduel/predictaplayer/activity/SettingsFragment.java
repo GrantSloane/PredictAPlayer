@@ -1,6 +1,7 @@
 package fanduel.predictaplayer.activity;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,7 @@ public class SettingsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, null, false);
+
         final NumberPicker difficultyLevel = (NumberPicker) view.findViewById(R.id.number_picker_difficulty);
         difficultyLevel.setMinValue(2);
         difficultyLevel.setMaxValue(8);

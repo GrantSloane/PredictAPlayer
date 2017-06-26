@@ -9,17 +9,20 @@ import android.preference.PreferenceManager;
  */
 public class SharedPreferenceManager
 {
+
+    public static final String SHARE_PREFERENCE_DIFFICULTY = "share_preference_difficulty";
+
     public static void setDifficulty(Context context, int difficulty)
     {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putInt("difficulty",difficulty);
+        editor.putInt(SHARE_PREFERENCE_DIFFICULTY,difficulty);
         editor.commit();
     }
 
     public static int getDifficulty(Context context)
     {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getInt("difficulty",4);
+        return pref.getInt(SHARE_PREFERENCE_DIFFICULTY,4);
     }
 }

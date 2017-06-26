@@ -32,7 +32,6 @@ import fanduel.predictaplayer.model.Players;
  */
 public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerViewHolder>  {
 
-    private static final String TAG = PlayerAdapter.class.getSimpleName();
     private List<Player> players;
     private int rowLayout;
     private Context context;
@@ -44,7 +43,6 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         LinearLayout playerLayout;
         ImageView profile ;
         TextView name ;
-        private int itemIndex;
 
         public PlayerViewHolder(View v) {
             super(v);
@@ -52,16 +50,6 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
             profile = (ImageView) v.findViewById(R.id.img_profile);
             name = (TextView) v.findViewById(R.id.txt_name);
         }
-
-        public void setItem(int item) {
-            itemIndex = item;
-        }
-
-//        @Override
-//        public void onClick(View view) {
-//            Log.d(TAG, "onClick " + getAdapterPosition() + " >>>>>>>>>>>> " + itemIndex);
-//
-//        }
     }
 
     public PlayerAdapter(List<Player> players, int rowLayout,int cellHeight,int winningIndex, Context context) {
@@ -92,7 +80,6 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.PlayerView
         final boolean correct = (position == winningIndex) ? true : false;
 
 
-        holder.setItem(position);
         holder.name.setText(name);
 
             Picasso.with(context)

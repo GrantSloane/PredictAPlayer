@@ -5,13 +5,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fanduel.predictaplayer.R;
-import fanduel.predictaplayer.listhandler.PlayerRoundGenerator;
 
 /**
  * Created by gcslo on 6/21/2017.
@@ -22,6 +22,8 @@ public class ResultFragment extends Fragment
     public static String EXTRA_PLAYER_NAME = "extra_player_name " ;
     public static String EXTRA_PLAYER_FPPG = "extra_player_fppg " ;
     public static String EXTRA_RESULT = "extra_result" ;
+
+    public static int CORRECT_GUESSES_REQUIRED = 10 ;
 
     private static final String TAG = ResultFragment.class.getSimpleName();
     private static String imageURL ;
@@ -58,14 +60,24 @@ public class ResultFragment extends Fragment
         if(correct) {
 
             profilePicture.setFillColor(getResources().getColor(R.color.green));
-            result.setText("Correct!");
+            result.setText(getResources().getString(R.string.correct));
             mainActivity.increaseCorrectScore();
+            if(mainActivity.getCorrectScore() == CORRECT_GUESSES_REQUIRED)
+            {
+                    double totalGuesses = CORRECT_GUESSES_REQUIRED + mainActivity.getIncorrectScore() ;
+                    double accuracy =  ( CORRECT_GUESSES_REQUIRED/totalGuesses)*100 ;
+                    LinearLayout lytWinner = (LinearLayout) view.findViewById(R.id.lyt_winner);
+                    lytWinner.setVisibility(View.VISIBLE);
+                    TextView txtWinner = (TextView) view.findViewById(R.id.txt_winner);
+                    txtWinner.setText(getResources().getString(R.string.congratulations) + " " + String.format("%.2f", accuracy).replace("00","") + "%");
+                    mainActivity.clearScore();
+            }
         }
         else
         {
             profilePicture.setFillColor(getResources().getColor(R.color.red));
-            result.setText("Incorrect!");
-            mainActivity.increaseInCorrectScore();
+            result.setText(getResources().getString(R.string.incorrect));
+            mainActivity.increaseIncorrectScore();
         }
 
         return view;
